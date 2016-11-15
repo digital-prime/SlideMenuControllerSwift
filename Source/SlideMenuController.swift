@@ -198,38 +198,41 @@ open class SlideMenuController: UIViewController, UIGestureRecognizerDelegate {
     
     
     open func addLeftGestures() {
-        if (leftViewController == nil) {
-            return
+    
+        if (leftViewController != nil) {
+            if leftPanGesture == nil {
+                leftPanGesture = UIPanGestureRecognizer(target: self, action: #selector(SlideMenuController.handleLeftPanGesture(_:)))
+                leftPanGesture!.delegate = self
+                view.addGestureRecognizer(leftPanGesture!)
+            }
+            
+            if leftTapGetsture == nil {
+                leftTapGetsture = UITapGestureRecognizer(target: self, action: #selector(UIViewController.toggleLeft))
+                leftTapGetsture!.delegate = self
+                view.addGestureRecognizer(leftTapGetsture!)
+            }
         }
-        if leftPanGesture == nil {
-            leftPanGesture = UIPanGestureRecognizer(target: self, action: #selector(SlideMenuController.handleLeftPanGesture(_:)))
-            leftPanGesture!.delegate = self
-            view.addGestureRecognizer(leftPanGesture!)
-        }
-        if leftTapGetsture == nil {
-            leftTapGetsture = UITapGestureRecognizer(target: self, action: #selector(UIViewController.toggleLeft))
-            leftTapGetsture!.delegate = self
-            view.addGestureRecognizer(leftTapGetsture!)
-        }   
     }
     
     open func addRightGestures() {
-        if (rightViewController == nil) {
-            return
-        }
-        if rightPanGesture == nil {
-            rightPanGesture = UIPanGestureRecognizer(target: self, action: #selector(SlideMenuController.handleRightPanGesture(_:)))
-            rightPanGesture!.delegate = self
-            view.addGestureRecognizer(rightPanGesture!)
-        }
-        if rightTapGesture == nil {
-            rightTapGesture = UITapGestureRecognizer(target: self, action: #selector(UIViewController.toggleRight))
-            rightTapGesture!.delegate = self
-            view.addGestureRecognizer(rightTapGesture!)
+        
+        if (rightViewController != nil) {
+            if rightPanGesture == nil {
+                rightPanGesture = UIPanGestureRecognizer(target: self, action: #selector(SlideMenuController.handleRightPanGesture(_:)))
+                rightPanGesture!.delegate = self
+                view.addGestureRecognizer(rightPanGesture!)
+            }
+            
+            if rightTapGesture == nil {
+                rightTapGesture = UITapGestureRecognizer(target: self, action: #selector(UIViewController.toggleRight))
+                rightTapGesture!.delegate = self
+                view.addGestureRecognizer(rightTapGesture!)
+            }
         }
     }
     
     open func removeLeftGestures() {
+        
         if leftPanGesture != nil {
             view.removeGestureRecognizer(leftPanGesture!)
             leftPanGesture = nil
@@ -242,6 +245,7 @@ open class SlideMenuController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     open func removeRightGestures() {
+        
         if rightPanGesture != nil {
             view.removeGestureRecognizer(rightPanGesture!)
             rightPanGesture = nil
@@ -272,6 +276,7 @@ open class SlideMenuController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     func handleLeftPanGesture(_ panGesture: UIPanGestureRecognizer) {
+        
         if !isTagetViewController() {
             return
         }
@@ -333,6 +338,7 @@ open class SlideMenuController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     func handleRightPanGesture(_ panGesture: UIPanGestureRecognizer) {
+        
         if !isTagetViewController() {
             return
         }
@@ -442,6 +448,7 @@ open class SlideMenuController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     open func closeLeftWithVelocity(_ velocity: CGFloat) {
+        
         let xOrigin: CGFloat = leftContainerView.frame.origin.x
         let finalXOrigin: CGFloat = leftMinOrigin()
         
@@ -471,6 +478,7 @@ open class SlideMenuController: UIViewController, UIGestureRecognizerDelegate {
     
     
     open func closeRightWithVelocity(_ velocity: CGFloat) {
+    
         let xOrigin: CGFloat = rightContainerView.frame.origin.x
         let finalXOrigin: CGFloat = view.bounds.width
     
@@ -537,6 +545,7 @@ open class SlideMenuController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     open func changeMainViewController(_ mainViewController: UIViewController,  close: Bool) {
+        
         removeViewController(self.mainViewController)
         self.mainViewController = mainViewController
         setUpViewController(mainContainerView, targetViewController: mainViewController)
@@ -547,6 +556,7 @@ open class SlideMenuController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     open func changeLeftViewController(_ leftViewController: UIViewController, closeLeft:Bool) {
+        
         removeViewController(self.leftViewController)
         self.leftViewController = leftViewController
         setUpViewController(leftContainerView, targetViewController: leftViewController)
@@ -574,6 +584,7 @@ open class SlideMenuController: UIViewController, UIGestureRecognizerDelegate {
     
     
     fileprivate func panLeftResultInfoForVelocity(_ velocity: CGPoint) -> PanInfo {
+        
         let thresholdVelocity: CGFloat = 1000.0
         let pointOfNoReturn: CGFloat = CGFloat(floor(leftMinOrigin())) + pointOfNoReturnWidth
         let leftOrigin: CGFloat = leftContainerView.frame.origin.x
@@ -594,6 +605,7 @@ open class SlideMenuController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     fileprivate func panRightResultInfoForVelocity(_ velocity: CGPoint) -> PanInfo {
+        
         let thresholdVelocity: CGFloat = -1000.0
         let pointOfNoReturn: CGFloat = CGFloat(floor(view.bounds.width) - pointOfNoReturnWidth)
         let rightOrigin: CGFloat = rightContainerView.frame.origin.x
@@ -614,6 +626,7 @@ open class SlideMenuController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     fileprivate func applyLeftTranslation(_ translation: CGPoint, toFrame:CGRect) -> CGRect {
+        
         var newOrigin: CGFloat = toFrame.origin.x
         newOrigin += translation.x
         
@@ -632,6 +645,7 @@ open class SlideMenuController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     fileprivate func applyRightTranslation(_ translation: CGPoint, toFrame: CGRect) -> CGRect {
+        
         var  newOrigin: CGFloat = toFrame.origin.x
         newOrigin += translation.x
         
@@ -650,18 +664,21 @@ open class SlideMenuController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     fileprivate func getOpenedLeftRatio() -> CGFloat {
+        
         let width: CGFloat = leftContainerView.frame.size.width
         let currentPosition: CGFloat = leftContainerView.frame.origin.x - leftMinOrigin()
         return currentPosition / width
     }
     
     fileprivate func getOpenedRightRatio() -> CGFloat {
+        
         let width: CGFloat = rightContainerView.frame.size.width
         let currentPosition: CGFloat = rightContainerView.frame.origin.x
         return -(currentPosition - view.bounds.width) / width
     }
     
     fileprivate func applyLeftOpacity() {
+        
         let openedLeftRatio: CGFloat = getOpenedLeftRatio()
         let opacity: CGFloat = contentViewOpacity * openedLeftRatio
         opacityView.layer.opacity = Float(opacity)
